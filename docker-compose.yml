@@ -5,7 +5,7 @@ services:
       - "11434"  # Solo accesible internamente, no se mapea al host
     volumes:
       - ollama_data:/root/.ollama
-    container_name: ollama
+    container_name: ollama-API
     restart: unless-stopped
     entrypoint: >
       sh -c "
@@ -17,15 +17,15 @@ services:
 
   python-service:
     build:
-      context: ./python-service
+      context: ./python-backend
     ports:
       - "8000:5000"  # expuesto al host
     depends_on:
       - ollama
     volumes:
-      - ./python-service:/app              # Esto mapea el código fuente
+      - ./python-backend:/app              # Esto mapea el código fuente
       - python_db_data:/app/instance           # para Flask-SQLAlchemy
-    container_name: python-service
+    container_name: python-backend
     restart: unless-stopped
 
 volumes:
