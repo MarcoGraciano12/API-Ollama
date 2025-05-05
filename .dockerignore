@@ -1,0 +1,19 @@
+# Ignorar entornos virtuales y configuración de IDEs
+.venv/
+.idea/
+
+# Archivos y carpetas temporales
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.sqlite3
+*.db
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos personales o de desarrollo
+*.env
+.env

@@ -1,0 +1,33 @@
+services:
+  ollama:
+    image: ollama/ollama
+    expose:
+      - "11434"  # Solo accesible internamente, no se mapea al host
+    volumes:
+      - ollama_data:/root/.ollama
+    container_name: ollama
+    restart: unless-stopped
+    entrypoint: >
+      sh -c "
+        ollama serve & 
+        sleep 5 && 
+        ollama pull qwen2.5:0.5b-instruct-fp16 &&
+        wait
+      "
+
+  python-service:
+    build:
+      context: ./python-service
+    ports:
+      - "8000:5000"  # expuesto al host
+    depends_on:
+      - ollama
+    volumes:
+      - ./python-service:/app              # Esto mapea el código fuente
+      - python_db_data:/app/instance           # para Flask-SQLAlchemy
+    container_name: python-service
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
+  python_db_data:
