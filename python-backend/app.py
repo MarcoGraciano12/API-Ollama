@@ -2,10 +2,10 @@ from flask import Flask, jsonify
 from flask_smorest import Api
 from flask_jwt_extended import JWTManager
 from blocklist import BLOCKLIST
-from datetime import timedelta
 
 from db import db
 from resources.user import blp as UserBlueprint
+from resources.chroma_db import blp as ChromaBlueprint
 
 
 def create_app(db_url=None):
@@ -25,8 +25,7 @@ def create_app(db_url=None):
     api = Api(app)
 
     app.config["JWT_SECRET_KEY"] = "Queso"
-    # app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=.5)  # o el tiempo que quieras
-    # app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=7)  # o el tiempo que quieras
+
     jwt = JWTManager(app)
 
     @jwt.expired_token_loader
@@ -88,6 +87,7 @@ def create_app(db_url=None):
         db.create_all()
 
     api.register_blueprint(UserBlueprint)
+    api.register_blueprint(ChromaBlueprint)
 
     print("USANDO CLAVE JWT:", app.config["JWT_SECRET_KEY"])
 
